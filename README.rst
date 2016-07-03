@@ -5,6 +5,17 @@ A sphinx extension that allows including wavedrom diagrams by using it's text-ba
 
 Wavedrom online editor and tutorial: http://wavedrom.com/
 
+Installation
+------------
+
+The wavedrom extension can be installed using pip:
+
+::
+	
+	pip install sphinx-wavedrom
+
+and by adding **'sphinxcontrib.wavedrom'** to the extensions list in your conf.py file.
+
 Directives
 ----------
 
