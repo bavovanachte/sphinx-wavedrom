@@ -1,13 +1,25 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
+
+project_url = 'https://github.com/ociu/sphinx-traceability-extension'
+
+requires = ['Sphinx>=0.6']
+
 setup(
-  name = 'sphinx-wavedrom',
-  packages = ['sphinx-wavedrom'],
-  version = '1.0',
-  description = 'A sphinx extension that allows generating wavedrom diagrams based on their textual representation',
-  author = 'Bavo Van Achte',
-  author_email = 'bavo.van.achte@gmail.com',
-  url = 'https://github.com/bavovanachte/sphinx-wavedrom',
-  download_url = 'https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.0',
-  keywords = ['sphinx', 'wavedrom', 'documentation'],
-  classifiers = [],
+    name='sphinx-wavedrom',
+    version='1.0',
+    url='https://github.com/bavovanachte/sphinx-wavedrom',
+    download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.0',
+    license='MIT license',
+    author='Bavo Van Achte',
+    author_email='bavo.van.achte@gmail.com',
+    description='A sphinx extension that allows generating wavedrom diagrams based on their textual representation',
+    long_description=open("README.rst").read(),
+    zip_safe=False,
+    classifiers=[],
+    platforms='any',
+    packages=find_packages(exclude=['example']),
+    include_package_data=True,
+    install_requires=requires,
+    namespace_packages=['sphinxcontrib'],
+    keywords = ['sphinx', 'wavedrom', 'documentation'],
 )
