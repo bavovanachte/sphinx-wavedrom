@@ -12,9 +12,13 @@ The extension is useable in the form of an extra wavedrom directive, as shown be
 
 ::
 
-  .. wavedrom:: 
-  
-     [wavedrom_diagram_description]
+	.. wavedrom::
+
+		{ signal: [
+		  	{ name: "clk",  wave: "P......" },
+		  	{ name: "bus",  wave: "x.==.=x", data: ["head", "body", "tail", "data"] },
+		  	{ name: "wire", wave: "0.1..0." }
+		]}
 
 The extension will not generate an image out of the diagram description itself,
 but it will surround it with some html and js tags in the final html document
