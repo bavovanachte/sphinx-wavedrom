@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
-project_url = 'https://github.com/ociu/sphinx-traceability-extension'
+project_url = 'https://github.com/bavovanachte/sphinx-wavedrom'
 
 requires = ['Sphinx>=0.6']
 
 setup(
     name='sphinx-wavedrom',
-    version='1.1',
+    version='1.2',
     url='https://github.com/bavovanachte/sphinx-wavedrom',
-    download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.1',
+    download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.2',
     license='MIT license',
     author='Bavo Van Achte',
     author_email='bavo.van.achte@gmail.com',
