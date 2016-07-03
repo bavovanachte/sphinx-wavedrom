@@ -12,7 +12,7 @@ The wavedrom extension can be installed using pip:
 
 ::
 	
-	pip install sphinx-wavedrom
+	pip install sphinxcontrib-wavedrom
 
 and by adding **'sphinxcontrib.wavedrom'** to the extensions list in your conf.py file.
 

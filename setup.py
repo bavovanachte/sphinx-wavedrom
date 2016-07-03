@@ -5,7 +5,7 @@ project_url = 'https://github.com/bavovanachte/sphinx-wavedrom'
 requires = ['Sphinx>=0.6']
 
 setup(
-    name='sphinx-wavedrom',
+    name='sphinxcontrib-wavedrom',
     version='1.2',
     url='https://github.com/bavovanachte/sphinx-wavedrom',
     download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.2',
