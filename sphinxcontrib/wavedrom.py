@@ -14,11 +14,14 @@ to use a local version of the js scripting, to allow for offline reading.
 
 from docutils import nodes
 from sphinx.util.compat import Directive
+from sphinx.util import copy_static_entry
+from os import path
+
+ONLINE_SKIN_JS = "http://wavedrom.com/skins/default.js"
+ONLINE_WAVEDROM_JS = "http://wavedrom.com/WaveDrom.js"
 
 WAVEDROM_SETUP = """
-<script src="{skins_js}" type="text/javascript"></script>
-    <script src="{wavedrom_js}" type="text/javascript"></script>
-    <script type="WaveDrom">
+<script type="WaveDrom">
 """
 
 WAVEDROM_TEARDOWN = """
@@ -51,18 +54,34 @@ class WavedromDirective(Directive):
 
     def run(self):
         env = self.state.document.settings.env
-        wd_setup = WAVEDROM_SETUP.format(skins_js = env.config.offline_skin_js_path,
-                                         wavedrom_js = env.config.offline_wavedrom_js_path)
-        text = "{wd_setup}{content}{wd_teardown}".format(wd_setup=wd_setup, 
+        text = "{wd_setup}{content}{wd_teardown}".format(wd_setup=WAVEDROM_SETUP, 
                                                          content="\n".join(self.content),
                                                          wd_teardown=WAVEDROM_TEARDOWN)
         content = nodes.raw(text=text, format='html')
         return [content]
 
+def builder_inited(app):
+    if app.config.offline_skin_js_path is not None:
+        app.add_javascript(app.config.offline_skin_js_path)
+    else:
+        app.add_javascript(ONLINE_SKIN_JS)
+    if app.config.offline_wavedrom_js_path is not None:
+        app.add_javascript(app.config.offline_wavedrom_js_path)
+    else:
+        app.add_javascript(ONLINE_WAVEDROM_JS)
+
+def build_finished(app, exception):
+    if app.config.offline_skin_js_path is not None:
+        copy_static_entry(path.join(app.builder.srcdir, app.config.offline_skin_js_path), path.join(app.builder.outdir, '_static'), app.builder)
+    if app.config.offline_wavedrom_js_path is not None:
+        copy_static_entry(path.join(app.builder.srcdir, app.config.offline_wavedrom_js_path), path.join(app.builder.outdir, '_static'), app.builder)
+
 # -----------------------------------------------------------------------------
 # Extension setup
 
 def setup(app):
-    app.add_config_value('offline_skin_js_path', "http://wavedrom.com/skins/default.js", 'html')
-    app.add_config_value('offline_wavedrom_js_path', "http://wavedrom.com/WaveDrom.js", 'html')
+    app.add_config_value('offline_skin_js_path', None, 'html')
+    app.add_config_value('offline_wavedrom_js_path', None, 'html')
     app.add_directive('wavedrom', WavedromDirective)
+    app.connect('build-finished', build_finished)
+    app.connect('builder-inited', builder_inited)
