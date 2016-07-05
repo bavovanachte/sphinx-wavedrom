@@ -16,8 +16,8 @@ from docutils import nodes
 from sphinx.util.compat import Directive
 
 WAVEDROM_SETUP = """
-<script src="http://wavedrom.com/skins/default.js" type="text/javascript"></script>
-    <script src="http://wavedrom.com/WaveDrom.js" type="text/javascript"></script>
+<script src="{skins_js}" type="text/javascript"></script>
+    <script src="{wavedrom_js}" type="text/javascript"></script>
     <script type="WaveDrom">
 """
 
@@ -51,7 +51,9 @@ class WavedromDirective(Directive):
 
     def run(self):
         env = self.state.document.settings.env
-        text = "{wd_setup}{content}{wd_teardown}".format(wd_setup=WAVEDROM_SETUP, 
+        wd_setup = WAVEDROM_SETUP.format(skins_js = env.config.offline_skin_js_path,
+                                         wavedrom_js = env.config.offline_wavedrom_js_path)
+        text = "{wd_setup}{content}{wd_teardown}".format(wd_setup=wd_setup, 
                                                          content="\n".join(self.content),
                                                          wd_teardown=WAVEDROM_TEARDOWN)
         content = nodes.raw(text=text, format='html')
@@ -61,4 +63,6 @@ class WavedromDirective(Directive):
 # Extension setup
 
 def setup(app):
+    app.add_config_value('offline_skin_js_path', "http://wavedrom.com/skins/default.js", 'html')
+    app.add_config_value('offline_wavedrom_js_path', "http://wavedrom.com/WaveDrom.js", 'html')
     app.add_directive('wavedrom', WavedromDirective)
