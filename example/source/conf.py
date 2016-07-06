@@ -33,6 +33,10 @@ sys.path.insert(0, os.path.abspath('../../sphinxcontrib'))
 # ones.
 extensions = ['wavedrom']
 
+#offline_skin_js_path = r"default.js"
+offline_skin_js_path = r"default.js"
+offline_wavedrom_js_path = r"../wavedrom.js"
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
