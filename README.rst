@@ -38,16 +38,19 @@ that allow the images to be rendered by the browser.
 Configuration
 -------------
 
-At the moment, the extension does not require any configuration in conf.py.
+The extension can work in 2 modes:
 
-In the future, I hope to make it possible to specify the path to a local js script, 
-instead of using the one provided on the wavedrom server,
+- Online mode: 	the extension links to the javascript file(s) provided by the wavedrom server
+- Offline mode: the extension uses the javascript file(s) that are saved locally on your drive.
 
-Limitations
------------
+The online mode is the default one. This requires no configuration in conf.py
 
-At the moment, the extension requires an active internet connection to work.
-The generation of the wavedrom images is done based on a JS script, provided by the wavedrom server.
+If offline mode is desired, the following parameters need to be provided:
+
+- **offline_skin_js_path** : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
+- **offline_wavedrom_js_path** : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
+
+The paths given for these configurations need to be relative to the configuration directory (the directory that contains conf.py)
 
 Examples
 --------
