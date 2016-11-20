@@ -20,18 +20,9 @@ from os import path
 ONLINE_SKIN_JS = "http://wavedrom.com/skins/default.js"
 ONLINE_WAVEDROM_JS = "http://wavedrom.com/WaveDrom.js"
 
-WAVEDROM_SETUP = """
+WAVEDROM_HTML = """
 <script type="WaveDrom">
-"""
-
-WAVEDROM_TEARDOWN = """
- </script>
-<script type="text/javascript">
-(function() {
-    try {
-        WaveDrom.ProcessAll();
-    } catch(e) {}
-})();
+{content}
 </script>
 """
 
@@ -54,13 +45,17 @@ class WavedromDirective(Directive):
 
     def run(self):
         env = self.state.document.settings.env
-        text = "{wd_setup}{content}{wd_teardown}".format(wd_setup=WAVEDROM_SETUP, 
-                                                         content="\n".join(self.content),
-                                                         wd_teardown=WAVEDROM_TEARDOWN)
+        text = WAVEDROM_HTML.format(content="\n".join(self.content))
         content = nodes.raw(text=text, format='html')
         return [content]
 
 def builder_inited(app):
+    """
+    We instruct sphinx to include some javascript files in the output html.
+    Depending on the settings provided in the configuration, we take either
+    the online files from the wavedrom server, or the locally provided wavedrom
+    javascript files
+    """
     if app.config.offline_skin_js_path is not None:
         app.add_javascript(path.basename(app.config.offline_skin_js_path))
     else:
@@ -71,11 +66,29 @@ def builder_inited(app):
         app.add_javascript(ONLINE_WAVEDROM_JS)
 
 def build_finished(app, exception):
+    """
+    When the build is finished, we copy the javascript files (if specified)
+    to the build directory (the static folder)
+    """
     if app.config.offline_skin_js_path is not None:
         copy_static_entry(path.join(app.builder.srcdir, app.config.offline_skin_js_path), path.join(app.builder.outdir, '_static'), app.builder)
     if app.config.offline_wavedrom_js_path is not None:
         copy_static_entry(path.join(app.builder.srcdir, app.config.offline_wavedrom_js_path), path.join(app.builder.outdir, '_static'), app.builder)
 
+def doctree_resolved(app, doctree, fromdocname):
+    """
+    When the document, and all the links are fully resolved, we inject one
+    raw html element for running the command for processing the wavedrom
+    diagrams at the onload event.
+    """
+    text = """
+    <script type="text/javascript">
+        function init() {
+            WaveDrom.ProcessAll();
+        }
+        window.onload = init;
+    </script>"""
+    doctree.append(nodes.raw(text=text, format='html'))
 # -----------------------------------------------------------------------------
 # Extension setup
 
@@ -85,3 +98,5 @@ def setup(app):
     app.add_directive('wavedrom', WavedromDirective)
     app.connect('build-finished', build_finished)
     app.connect('builder-inited', builder_inited)
+    app.connect('doctree-resolved', doctree_resolved)
+
