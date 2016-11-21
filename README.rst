@@ -5,6 +5,12 @@ A sphinx extension that allows including wavedrom diagrams by using it's text-ba
 
 Wavedrom online editor and tutorial: http://wavedrom.com/
 
+.. image:: https://travis-ci.org/bavovanachte/sphinx-wavedrom.svg?branch=master
+    :target: https://travis-ci.org/bavovanachte/sphinx-wavedrom
+
+.. image:: https://badge.fury.io/py/sphinxcontrib-wavedrom.svg
+    :target: https://badge.fury.io/py/sphinxcontrib-wavedrom
+
 Installation
 ------------
 
