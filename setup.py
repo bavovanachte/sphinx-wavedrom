@@ -6,9 +6,9 @@ requires = ['Sphinx>=0.6']
 
 setup(
     name='sphinxcontrib-wavedrom',
-    version='1.2.0',
+    version='1.3.0',
     url='https://github.com/bavovanachte/sphinx-wavedrom',
-    download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.2.0',
+    download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.3.0',
     license='MIT license',
     author='Bavo Van Achte',
     author_email='bavo.van.achte@gmail.com',
