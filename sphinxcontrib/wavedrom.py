@@ -21,9 +21,11 @@ ONLINE_SKIN_JS = "http://wavedrom.com/skins/default.js"
 ONLINE_WAVEDROM_JS = "http://wavedrom.com/WaveDrom.js"
 
 WAVEDROM_HTML = """
+<div style="overflow-x:auto">
 <script type="WaveDrom">
 {content}
 </script>
+</div>
 """
 
 class WavedromDirective(Directive):
