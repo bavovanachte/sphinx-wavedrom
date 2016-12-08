@@ -1,7 +1,7 @@
 Sphinx wavedrom extension 
 =========================
 
-A sphinx extension that allows including wavedrom diagrams by using it's text-based representation
+A sphinx extension that allows including wavedrom diagrams by using its text-based representation
 
 Wavedrom online editor and tutorial: http://wavedrom.com/
 
