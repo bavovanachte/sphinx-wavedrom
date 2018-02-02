@@ -1,19 +1,19 @@
 """
-This sphinx extension allows the user to include wavedrom waveform diagrams 
-in its documentation, by just using the textual description, rather than 
+This sphinx extension allows the user to include wavedrom waveform diagrams
+in its documentation, by just using the textual description, rather than
 generating and including static images.
 
 At the moment, the extension doesn't generate static images itself, but
 relies on the js scripts provided by wavedrom to generate them in the browser.
 
-By default, the script will use the js hosted on the wavedrom servers. 
-This is the easiest setup, but relies on an active internet connection and a 
+By default, the script will use the js hosted on the wavedrom servers.
+This is the easiest setup, but relies on an active internet connection and a
 stable hosting on wavedrom's side. In the near future, I aim to add the possibility
 to use a local version of the js scripting, to allow for offline reading.
 """
 
 from docutils import nodes
-from sphinx.util.compat import Directive
+from docutils.parsers.rst import Directive
 from sphinx.util import copy_static_entry
 from os import path
 
