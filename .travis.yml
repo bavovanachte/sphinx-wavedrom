@@ -8,7 +8,6 @@ notifications:
     on_success: never
     on_failure: always
 deploy:
-  matrix:
   - provider: pypi
     distributions: sdist
     server: https://test.pypi.org/legacy/
