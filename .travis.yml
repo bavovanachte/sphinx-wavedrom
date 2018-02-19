@@ -2,9 +2,35 @@ language: python
 python:
   - "2.7"
 
-install: "pip install -q -r requirements.txt --use-mirrors"
+install: "pip install -q -r requirements.txt"
 
 script: cd example && make clean && make html
 # Flags used here, not in `make html`:
 #  -n   Run in nit-picky mode. Currently, this generates warnings for all missing references.
 #  -W   Turn warnings into errors. This means that the build stops at the first warning and sphinx-build exits with exit status 1.
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+
+deploy:
+  # test pypi
+  - provider: pypi
+    distributions: sdist
+    server: https://testpypi.python.org/pypi
+    user: bavo.van.achte
+    password:
+      secure: cKCBgEUOSUnlPbOxHCrXENlVgdMGnjNC+7nnutp/1xF8VEDF3aj9Br4u5LKrAYs0sm0AvnCyjhPvfKGPwyRDdfGBjoG06G+L+1hcfpgBlItmdSBqB8RxMm2B76si1ZlVI9gC58hlk/agFr2vik/mLXsH23rafB/2UwfB3ItTTx2J14xC5jlaqYR/srMJUi8YO5z6mGGLokfcz0KhYUHegOna38UcARM8rkAC2Je0xrPKZMlCoTI84dqwnFPW4zn3g/B5s3s18gmZu4fE4+J1g0PNMvxhbDP1TIBzPSWXLBv+YPSKrIT6+Q4R/kfDJFzLn3SmDDnNOpD/OC8ssqVJOcQL3HhKQ7EAcxX9W+/Rt7mIpdJdDXohiPrBl9EdRYbhB+KiPeo/dekAV6loUP/8cHuEgjcW/gE8t+HIqWsa5SO9yK7Sz8Ym+0ENdzS1df0iPOj2ebR3kb1iwINdFi7zIG6Utvlf7w1A2Qtx1xfI2+woPU+GOgQrpwdw64Wl1uo4l0kqTpFkytIG7BEVWC+zPPzqddi+3Ulf9AkWSjNDTqYafxZ9oqBJ5q7WPH8zyPQHotcHbnziTAnv7qRa+CTFLeME/KXNT8egToLK75G367lANTFIhMm8eSDS7wAxFWHacq8j68wNb38Yj1Rv1WMHQh14sxOkzQ4hVEV0xYY7Bj8=
+    on:
+      branch: master
+      tags: false
+  # production pypi
+  - provider: pypi
+    distributions: sdist
+    user: bavo.van.achte
+    password:
+      secure: cKCBgEUOSUnlPbOxHCrXENlVgdMGnjNC+7nnutp/1xF8VEDF3aj9Br4u5LKrAYs0sm0AvnCyjhPvfKGPwyRDdfGBjoG06G+L+1hcfpgBlItmdSBqB8RxMm2B76si1ZlVI9gC58hlk/agFr2vik/mLXsH23rafB/2UwfB3ItTTx2J14xC5jlaqYR/srMJUi8YO5z6mGGLokfcz0KhYUHegOna38UcARM8rkAC2Je0xrPKZMlCoTI84dqwnFPW4zn3g/B5s3s18gmZu4fE4+J1g0PNMvxhbDP1TIBzPSWXLBv+YPSKrIT6+Q4R/kfDJFzLn3SmDDnNOpD/OC8ssqVJOcQL3HhKQ7EAcxX9W+/Rt7mIpdJdDXohiPrBl9EdRYbhB+KiPeo/dekAV6loUP/8cHuEgjcW/gE8t+HIqWsa5SO9yK7Sz8Ym+0ENdzS1df0iPOj2ebR3kb1iwINdFi7zIG6Utvlf7w1A2Qtx1xfI2+woPU+GOgQrpwdw64Wl1uo4l0kqTpFkytIG7BEVWC+zPPzqddi+3Ulf9AkWSjNDTqYafxZ9oqBJ5q7WPH8zyPQHotcHbnziTAnv7qRa+CTFLeME/KXNT8egToLK75G367lANTFIhMm8eSDS7wAxFWHacq8j68wNb38Yj1Rv1WMHQh14sxOkzQ4hVEV0xYY7Bj8=
+    on:
+      branch: master
+      tags: true
