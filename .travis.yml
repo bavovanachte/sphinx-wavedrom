@@ -1,36 +1,29 @@
 language: python
 python:
-  - "2.7"
-
-install: "pip install -q -r requirements.txt"
-
+- '2.7'
+install: pip install -q -r requirements.txt
 script: cd example && make clean && make html && cd ..
-# Flags used here, not in `make html`:
-#  -n   Run in nit-picky mode. Currently, this generates warnings for all missing references.
-#  -W   Turn warnings into errors. This means that the build stops at the first warning and sphinx-build exits with exit status 1.
-
 notifications:
   email:
     on_success: never
     on_failure: always
-
 deploy:
-  # test pypi
+  matrix:
   - provider: pypi
     distributions: sdist
     server: https://test.pypi.org/legacy/
     user: bavo.van.achte
     password:
-      secure: cKCBgEUOSUnlPbOxHCrXENlVgdMGnjNC+7nnutp/1xF8VEDF3aj9Br4u5LKrAYs0sm0AvnCyjhPvfKGPwyRDdfGBjoG06G+L+1hcfpgBlItmdSBqB8RxMm2B76si1ZlVI9gC58hlk/agFr2vik/mLXsH23rafB/2UwfB3ItTTx2J14xC5jlaqYR/srMJUi8YO5z6mGGLokfcz0KhYUHegOna38UcARM8rkAC2Je0xrPKZMlCoTI84dqwnFPW4zn3g/B5s3s18gmZu4fE4+J1g0PNMvxhbDP1TIBzPSWXLBv+YPSKrIT6+Q4R/kfDJFzLn3SmDDnNOpD/OC8ssqVJOcQL3HhKQ7EAcxX9W+/Rt7mIpdJdDXohiPrBl9EdRYbhB+KiPeo/dekAV6loUP/8cHuEgjcW/gE8t+HIqWsa5SO9yK7Sz8Ym+0ENdzS1df0iPOj2ebR3kb1iwINdFi7zIG6Utvlf7w1A2Qtx1xfI2+woPU+GOgQrpwdw64Wl1uo4l0kqTpFkytIG7BEVWC+zPPzqddi+3Ulf9AkWSjNDTqYafxZ9oqBJ5q7WPH8zyPQHotcHbnziTAnv7qRa+CTFLeME/KXNT8egToLK75G367lANTFIhMm8eSDS7wAxFWHacq8j68wNb38Yj1Rv1WMHQh14sxOkzQ4hVEV0xYY7Bj8=
+      secure: eTU2xAyjwVyYrpX8A4H64a6NNrDdVw4p45h0ZWzxD0Fb+4MQ6P/S6td/vn7tZGoBIbWVwzsOAaKNQLs+V2D03jtehxf12pkTw7I21B/hDgsp2DuTFM2GI/xOCcA7VoBEuEBZiMJiUGFbg7hoa/cHqHd3s97IowZ2+WaIzZoL28D0sSknyRTva63sG/oQfMWXCZ5SH4DthoFCsB3+jXhC4HKZbJzYOw2xeHHemkKmXo65a/whwsya++UuCqpo+/n+jWycjFun00sy2nE1CecQ4l0F4EpWPZgSR/a3mu4qVFW5YuZ9N1scorzZwryCREGwWRmNRRMtqNnfBcyrYvoDIRWcC1vkqv5511Qdu6ZlnHeh5FPNDMJefzzaOokpGlCLmTWcwjCprUyjXPW9xyHoHU/kdDiw5TUMmtkDvK/EgVoUNbNsCkmywbPaWzDimF3ghC0BbV2vfMCWUlBeO+C5/4HIRKJ5VKcTW9FfbuQe61tf1mN9af8j1VGXZSB6Y/aPSGQkrt0Aq+LbzMAn4Hf9z42/UGVS2/lHb7X0/p2dVEl3RG4mr8l/DtpZ5ilzF4EmFx2By+1eN24CYDshrc7momuZ+8JFUf/ECuMCi9Dv7L0UpwbQyYyoJmjyBAcCAXyZ2Db5sPuFuTm4mBeIbPe3RWmMApD8bdPq503K8g/siN4=
     on:
       branch: master
       tags: false
-  # production pypi
   - provider: pypi
     distributions: sdist
     user: bavo.van.achte
     password:
-      secure: cKCBgEUOSUnlPbOxHCrXENlVgdMGnjNC+7nnutp/1xF8VEDF3aj9Br4u5LKrAYs0sm0AvnCyjhPvfKGPwyRDdfGBjoG06G+L+1hcfpgBlItmdSBqB8RxMm2B76si1ZlVI9gC58hlk/agFr2vik/mLXsH23rafB/2UwfB3ItTTx2J14xC5jlaqYR/srMJUi8YO5z6mGGLokfcz0KhYUHegOna38UcARM8rkAC2Je0xrPKZMlCoTI84dqwnFPW4zn3g/B5s3s18gmZu4fE4+J1g0PNMvxhbDP1TIBzPSWXLBv+YPSKrIT6+Q4R/kfDJFzLn3SmDDnNOpD/OC8ssqVJOcQL3HhKQ7EAcxX9W+/Rt7mIpdJdDXohiPrBl9EdRYbhB+KiPeo/dekAV6loUP/8cHuEgjcW/gE8t+HIqWsa5SO9yK7Sz8Ym+0ENdzS1df0iPOj2ebR3kb1iwINdFi7zIG6Utvlf7w1A2Qtx1xfI2+woPU+GOgQrpwdw64Wl1uo4l0kqTpFkytIG7BEVWC+zPPzqddi+3Ulf9AkWSjNDTqYafxZ9oqBJ5q7WPH8zyPQHotcHbnziTAnv7qRa+CTFLeME/KXNT8egToLK75G367lANTFIhMm8eSDS7wAxFWHacq8j68wNb38Yj1Rv1WMHQh14sxOkzQ4hVEV0xYY7Bj8=
+      secure: eTU2xAyjwVyYrpX8A4H64a6NNrDdVw4p45h0ZWzxD0Fb+4MQ6P/S6td/vn7tZGoBIbWVwzsOAaKNQLs+V2D03jtehxf12pkTw7I21B/hDgsp2DuTFM2GI/xOCcA7VoBEuEBZiMJiUGFbg7hoa/cHqHd3s97IowZ2+WaIzZoL28D0sSknyRTva63sG/oQfMWXCZ5SH4DthoFCsB3+jXhC4HKZbJzYOw2xeHHemkKmXo65a/whwsya++UuCqpo+/n+jWycjFun00sy2nE1CecQ4l0F4EpWPZgSR/a3mu4qVFW5YuZ9N1scorzZwryCREGwWRmNRRMtqNnfBcyrYvoDIRWcC1vkqv5511Qdu6ZlnHeh5FPNDMJefzzaOokpGlCLmTWcwjCprUyjXPW9xyHoHU/kdDiw5TUMmtkDvK/EgVoUNbNsCkmywbPaWzDimF3ghC0BbV2vfMCWUlBeO+C5/4HIRKJ5VKcTW9FfbuQe61tf1mN9af8j1VGXZSB6Y/aPSGQkrt0Aq+LbzMAn4Hf9z42/UGVS2/lHb7X0/p2dVEl3RG4mr8l/DtpZ5ilzF4EmFx2By+1eN24CYDshrc7momuZ+8JFUf/ECuMCi9Dv7L0UpwbQyYyoJmjyBAcCAXyZ2Db5sPuFuTm4mBeIbPe3RWmMApD8bdPq503K8g/siN4=
     on:
       branch: master
       tags: true
+
