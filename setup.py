@@ -6,9 +6,11 @@ requires = ['Sphinx>=1.8']
 
 setup(
     name='sphinxcontrib-wavedrom',
-    version='1.3.1',
+    use_scm_version={
+        "relative_to": __file__,
+        "write_to": "sphinxcontrib/version.py",
+    },
     url='https://github.com/bavovanachte/sphinx-wavedrom',
-    download_url='https://github.com/bavovanachte/sphinx-wavedrom/tarball/1.3.0',
     license='MIT license',
     author='Bavo Van Achte',
     author_email='bavo.van.achte@gmail.com',
@@ -20,6 +22,9 @@ setup(
     packages=find_packages(exclude=['example']),
     include_package_data=True,
     install_requires=requires,
+    setup_requires=[
+        'setuptools_scm',
+    ],
     namespace_packages=['sphinxcontrib'],
     keywords = ['sphinx', 'wavedrom', 'documentation'],
 )
