@@ -95,6 +95,13 @@ class WavedromDirective(Image, SphinxDirective):
         node = wavedromnode()
 
         node['code'] = code
+        wd_node = node # point to the actual wavedrom node
+
+        # A caption option turns this image into a Figure
+        caption = self.options.get('caption')
+        if caption:
+            node = figure_wrapper(self, wd_node, caption)
+            self.add_name(node)
 
         # Run image directive processing for the options, supply dummy argument, otherwise will fail.
         # We don't actually replace this node by the image_node and will also not make it a child,
@@ -102,13 +109,7 @@ class WavedromDirective(Image, SphinxDirective):
         # want to generate any files in the user sources. Store the image_node private to this node
         # and not in the docutils tree and use it later. Revisit this when the situation changes.
         self.arguments = ["dummy"]
-        (node['image_node'],) = Image.run(self)
-
-        # A caption option turns this image into a Figure
-        caption = self.options.get('caption')
-        if caption:
-            node = figure_wrapper(self, node, caption)
-            pass
+        (wd_node['image_node'],) = Image.run(self)
 
         return [node]
 
