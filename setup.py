@@ -2,7 +2,10 @@ from setuptools import setup, find_packages
 
 project_url = 'https://github.com/bavovanachte/sphinx-wavedrom'
 
-requires = ['Sphinx>=1.8']
+requires = ['Sphinx>=1.8',
+            'wavedrom>=0.1',
+            'cairosvg>=2;python_version>="3.3"',
+            'xcffib;python_version>="3.3"']
 
 setup(
     name='sphinxcontrib-wavedrom',
@@ -12,8 +15,8 @@ setup(
     },
     url='https://github.com/bavovanachte/sphinx-wavedrom',
     license='MIT license',
-    author='Bavo Van Achte',
-    author_email='bavo.van.achte@gmail.com',
+    author='Bavo Van Achte, Stefan Wallentowitz',
+    author_email='bavo.van.achte@gmail.com, stefan@wallentowitz.de',
     description='A sphinx extension that allows generating wavedrom diagrams based on their textual representation',
     long_description=open("README.rst").read(),
     zip_safe=False,
