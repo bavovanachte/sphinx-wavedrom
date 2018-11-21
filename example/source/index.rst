@@ -274,3 +274,9 @@ Step 9. Some code
 			{name: 'bin', wave: '='.repeat(ticks), data: data}, arr
 		]};
 	})(5, 16)
+
+=================
+Step10. From file
+=================
+
+.. wavedrom:: example.json

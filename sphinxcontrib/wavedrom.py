@@ -13,9 +13,11 @@ to use a local version of the js scripting, to allow for offline reading.
 """
 
 from docutils import nodes
-from docutils.parsers.rst import Directive
 from sphinx.util import copy_static_entry
 from os import path
+from sphinx.locale import __
+from sphinx.util.docutils import SphinxDirective
+from sphinx.util.i18n import search_image_for_language
 
 ONLINE_SKIN_JS = "http://wavedrom.com/skins/default.js"
 ONLINE_WAVEDROM_JS = "http://wavedrom.com/WaveDrom.js"
@@ -28,7 +30,8 @@ WAVEDROM_HTML = """
 </div>
 """
 
-class WavedromDirective(Directive):
+
+class WavedromDirective(SphinxDirective):
     """
     Directive to declare items and their traceability relationships.
     Syntax::
@@ -45,11 +48,38 @@ class WavedromDirective(Directive):
     # Setting has_content to true marks that this directive has content (stored in self.content)
     has_content = True
 
+    required_arguments = 0
+    optional_arguments = 1
+    final_argument_whitespace = False
+
     def run(self):
-        env = self.state.document.settings.env
-        text = WAVEDROM_HTML.format(content="\n".join(self.content))
+        if self.arguments:
+            document = self.state.document
+            if self.content:
+                return [document.reporter.warning(
+                    __('wavedrom directive cannot have both content and '
+                       'a filename argument'), line=self.lineno)]
+            argument = search_image_for_language(self.arguments[0], self.env)
+            rel_filename, filename = self.env.relfn2path(argument)
+            self.env.note_dependency(rel_filename)
+            try:
+                with open(filename, 'r') as fp:  # type: ignore
+                    code = fp.read()
+            except (IOError, OSError):
+                return [document.reporter.warning(
+                    __('External wavedrom json file %r not found or reading '
+                       'it failed') % filename, line=self.lineno)]
+        else:
+            code = "\n".join(self.content)
+            if not code.strip():
+                return [self.state_machine.reporter.warning(
+                    __('Ignoring "wavedrom" directive without content.'),
+                    line=self.lineno)]
+
+        text = WAVEDROM_HTML.format(content=code)
         content = nodes.raw(text=text, format='html')
         return [content]
+
 
 def builder_inited(app):
     """
