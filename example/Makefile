@@ -2,10 +2,14 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -W
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
+
+ifdef WAVEDROM_HTML_NOJSINLINE
+SPHINXOPTS += -D wavedrom_html_jsinline=0
+endif
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
