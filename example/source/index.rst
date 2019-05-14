@@ -291,3 +291,18 @@ Step 11. Figure
 	:caption: Figure caption
 	:name: examplefig
 
+========
+Register
+========
+
+.. wavedrom::
+
+  { "reg": [
+    { "name": "IPO",   "bits": 8, "attr": "RO" },
+    {                  "bits": 7 },
+    { "name": "BRK",   "bits": 5, "attr": "RW", "type": 1 },
+    { "name": "CPK",   "bits": 1 },
+    { "name": "Clear", "bits": 3 },
+    { "bits": 8 }
+  ]}
+

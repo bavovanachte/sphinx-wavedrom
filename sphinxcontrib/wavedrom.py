@@ -15,7 +15,7 @@ from sphinx.util import copy_static_entry
 from sphinx.locale import __
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.i18n import search_image_for_language
-from wavedrom import WaveDrom
+from wavedrom import render
 
 # This exception was not always available..
 try:
@@ -134,7 +134,7 @@ def render_wavedrom(self, node, outpath, bname, format):
 
     # Try to convert node, raise error with code on failure
     try:
-        svgout = WaveDrom().renderWaveForm(0, json.loads(node['code']))
+        svgout = render(node["code"])
     except JSONDecodeError as e:
         raise SphinxError("Cannot render the following json code: \n{} \n\nError: {}".format(node['code'], e))
 
