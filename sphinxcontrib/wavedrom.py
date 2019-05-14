@@ -11,7 +11,7 @@ from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Image
 from sphinx.errors import SphinxError
 from sphinx.ext.graphviz import figure_wrapper
-from sphinx.util import copy_static_entry
+from sphinx.util.fileutil import copy_asset_file
 from sphinx.locale import __
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.i18n import search_image_for_language
@@ -235,9 +235,9 @@ def build_finished(app, exception):
         return
 
     if app.config.offline_skin_js_path is not None:
-        copy_static_entry(path.join(app.builder.srcdir, app.config.offline_skin_js_path), path.join(app.builder.outdir, '_static'), app.builder)
+        copy_asset_file(path.join(app.builder.srcdir, app.config.offline_skin_js_path), path.join(app.builder.outdir, '_static'), app.builder)
     if app.config.offline_wavedrom_js_path is not None:
-        copy_static_entry(path.join(app.builder.srcdir, app.config.offline_wavedrom_js_path), path.join(app.builder.outdir, '_static'), app.builder)
+        copy_asset_file(path.join(app.builder.srcdir, app.config.offline_wavedrom_js_path), path.join(app.builder.outdir, '_static'), app.builder)
 
 
 def doctree_resolved(app, doctree, fromdocname):
