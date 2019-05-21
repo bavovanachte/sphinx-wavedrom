@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 project_url = 'https://github.com/bavovanachte/sphinx-wavedrom'
 
 requires = ['Sphinx>=1.8',
-            'wavedrom>=0.1',
+            'wavedrom>=1.9.0rc1',
             'cairosvg>=2;python_version>="3.3"',
             'xcffib;python_version>="3.3"']
 
