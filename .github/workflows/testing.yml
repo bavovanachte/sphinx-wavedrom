@@ -1,4 +1,4 @@
-name: Tox testing
+name: Tox testing`
 
 on: [push]
 
@@ -15,8 +15,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
-      - name: Install Tox and any other packages
-        run: pip install tox
-      - name: Run Tox
+      - name: Install dependencies
+        run: pip install sphinx_rtd_theme
+      - name: Run tests
         # Run tox using the version of Python in `PATH`
-        run: tox -e py
+        run:
+          - make -C example clean html
+          - make -C example clean singlehtml
+          - make -C example clean dirhtml
+          - make -C example clean html WAVEDROM_HTML_NOJSINLINE=1
+          - make -C example clean singlehtml WAVEDROM_HTML_NOJSINLINE=1
+          - make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1pytesttox -e py
