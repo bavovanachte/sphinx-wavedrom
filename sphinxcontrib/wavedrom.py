@@ -16,6 +16,7 @@ from sphinx.locale import __
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.i18n import search_image_for_language
 from wavedrom import render
+from .wavedrom_cli_wrapper import render_wavedrom_cli
 
 # This exception was not always available..
 try:
@@ -127,11 +128,12 @@ def determine_format(supported):
     return None
 
 
-def render_wavedrom(self, node, outpath, bname, format):
+def render_wavedrom_py(self, node, outpath, bname, format):
     """
     Render a wavedrom image
     """
 
+    raise Exception()
     # Try to convert node, raise error with code on failure
     try:
         svgout = render(node["code"])
@@ -184,7 +186,10 @@ def visit_wavedrom(self, node):
     outpath = path.join(self.builder.outdir, self.builder.imagedir)
 
     # Render the wavedrom image
-    imgname = render_wavedrom(self, node, outpath, bname, format)
+    if self.builder.config.wavedrompy_renderer:
+        imgname = render_wavedrom_py(self, node, outpath, bname, format)
+    else:
+        imgname = render_wavedrom_cli(self, node, outpath, bname, format)
 
     # Now we unpack the image node again. The file was created at the build destination,
     # and we can now use the standard visitor for the image node. We add the image node
@@ -267,6 +272,8 @@ def setup(app):
     app.add_config_value('offline_skin_js_path', None, 'html')
     app.add_config_value('offline_wavedrom_js_path', None, 'html')
     app.add_config_value('wavedrom_html_jsinline', True, 'html')
+    app.add_config_value('wavedrom_cli', "npx wavedrom-cli", 'html')
+    app.add_config_value('wavedrompy_renderer', False, 'html')
     app.add_directive('wavedrom', WavedromDirective)
     app.connect('build-finished', build_finished)
     app.connect('builder-inited', builder_inited)
