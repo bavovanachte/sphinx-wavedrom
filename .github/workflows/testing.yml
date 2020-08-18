@@ -53,4 +53,4 @@ jobs:
       - name: Install sphinxcontrib-wavedrom module itself
         run: pip install -e .
       - name: Build latexpdf document
-        run: make -C example clean latexpdf=1
+        run: make -C example clean latexpdf
