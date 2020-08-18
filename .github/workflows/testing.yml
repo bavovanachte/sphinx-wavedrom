@@ -53,7 +53,7 @@ jobs:
       - name: Install sphinxcontrib-wavedrom module itself
         run: pip install -e .
       - name: Install latex
-        run: apt-get update --allow-unauthenticated -y && apt-get install -y latexmk && apt-get install -y texlive-latex-recommended && apt-get install -y texlive-fonts-recommended && apt-get install -y texlive-latex-extra
+        run: sudo apt-get update --allow-unauthenticated -y && apt-get install -y latexmk && apt-get install -y texlive-latex-recommended && apt-get install -y texlive-fonts-recommended && apt-get install -y texlive-latex-extra
       - name: Build latexpdf document
         run: make -C example clean latexpdf
 
