@@ -17,12 +17,15 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
         run: pip install sphinx_rtd_theme
-      - name: Run tests
-        # Run tox using the version of Python in `PATH`
-        run:
-          - make -C example clean html
-          - make -C example clean singlehtml
-          - make -C example clean dirhtml
-          - make -C example clean html WAVEDROM_HTML_NOJSINLINE=1
-          - make -C example clean singlehtml WAVEDROM_HTML_NOJSINLINE=1
-          - make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1pytesttox -e py
+      - name: Build html document with JS rendering
+        run: make -C example clean html
+      - name: Build singlehtml document with JS rendering
+        run: make -C example clean singlehtml
+      - name: Build dirhtml document with JS rendering
+        run: make -C example clean dirhtml
+      - name: Build html document with prebuilt images
+        run: make -C example clean html WAVEDROM_HTML_NOJSINLINE=1
+      - name: Build singlehtml document with prebuilt images
+        run: make -C example clean singlehtml WAVEDROM_HTML_NOJSINLINE=1
+      - name: Build dirhtml document with prebuilt images
+        run: make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1pytesttox -e py
