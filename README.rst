@@ -108,7 +108,7 @@ conf.py:
 	+ {online_wavedrom_js_url}/skins/default.js
 	+ {online_wavedrom_js_url}/wavedrom.js
 
-.. warning:: A full URI is needed when configuring. "http://www.google.com" will work but "www.google.com" won't.
+**Warning**: A full URI is needed when configuring. "http://www.google.com" will work but "www.google.com" won't.
 
 If offline mode is desired, the following parameters need to be provided:
 
