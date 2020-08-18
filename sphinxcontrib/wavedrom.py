@@ -24,7 +24,7 @@ except ImportError:
     JSONDecodeError = ValueError
 
 ONLINE_SKIN_JS = "http://wavedrom.com/skins/default.js"
-ONLINE_WAVEDROM_JS = "http://wavedrom.com/WaveDrom.js"
+ONLINE_WAVEDROM_JS = "http://wavedrom.com/wavedrom.min.js"
 
 WAVEDROM_HTML = """
 <div style="overflow-x:auto">
@@ -216,13 +216,13 @@ def builder_inited(app):
         return
 
     if app.config.offline_skin_js_path is not None:
-        app.add_javascript(path.basename(app.config.offline_skin_js_path))
+        app.add_js_file(path.basename(app.config.offline_skin_js_path))
     else:
-        app.add_javascript(ONLINE_SKIN_JS)
+        app.add_js_file(ONLINE_SKIN_JS)
     if app.config.offline_wavedrom_js_path is not None:
-        app.add_javascript(path.basename(app.config.offline_wavedrom_js_path))
+        app.add_js_file(path.basename(app.config.offline_wavedrom_js_path))
     else:
-        app.add_javascript(ONLINE_WAVEDROM_JS)
+        app.add_js_file(ONLINE_WAVEDROM_JS)
 
 
 def build_finished(app, exception):
