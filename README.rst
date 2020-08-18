@@ -1,4 +1,4 @@
-Sphinx wavedrom extension 
+Sphinx wavedrom extension
 =========================
 
 A sphinx extension that allows including wavedrom diagrams by using its text-based representation
@@ -68,6 +68,11 @@ by the browser. This is the currently the default for HTML output.
 
 Configuration
 -------------
+
+The following decision tree gives an overview of which configurations to make in different use cases:
+
+.. image:: configuration.png
+  :alt: Decision tree for configuration settings
 
 The extension can be configured to either directly output images or by emitting the javascript to live-render the
 wavedrom code, which obviously only works for HTML output. All other outputs (most notably ``latexpdf``) embed a
