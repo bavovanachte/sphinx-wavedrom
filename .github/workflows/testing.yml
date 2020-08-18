@@ -32,4 +32,4 @@ jobs:
       - name: Build singlehtml document with prebuilt images
         run: make -C example clean singlehtml WAVEDROM_HTML_NOJSINLINE=1
       - name: Build dirhtml document with prebuilt images
-        run: make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1pytesttox -e py
+        run: make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1
