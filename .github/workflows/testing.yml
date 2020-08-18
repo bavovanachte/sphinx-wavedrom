@@ -17,6 +17,8 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
         run: pip install sphinx_rtd_theme
+      - name: Install sphinxcontrib-wavedrom module itself
+        run: pip install .
       - name: Build html document with JS rendering
         run: make -C example clean html
       - name: Build singlehtml document with JS rendering
