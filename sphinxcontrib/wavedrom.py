@@ -218,11 +218,11 @@ def builder_inited(app):
     if app.config.offline_skin_js_path is not None:
         app.add_js_file(path.basename(app.config.offline_skin_js_path))
     else:
-        app.add_js_file(ONLINE_SKIN_JS.format(url=app.config.online_wavedrom_js_path))
+        app.add_js_file(ONLINE_SKIN_JS.format(url=app.config.online_wavedrom_js_url))
     if app.config.offline_wavedrom_js_path is not None:
         app.add_js_file(path.basename(app.config.offline_wavedrom_js_path))
     else:
-        app.add_js_file(ONLINE_WAVEDROM_JS.format(url=app.config.online_wavedrom_js_path))
+        app.add_js_file(ONLINE_WAVEDROM_JS.format(url=app.config.online_wavedrom_js_url))
 
 
 def build_finished(app, exception):
@@ -266,7 +266,7 @@ def setup(app):
     """
     app.add_config_value('offline_skin_js_path', None, 'html')
     app.add_config_value('offline_wavedrom_js_path', None, 'html')
-    app.add_config_value('online_wavedrom_js_path', "http://wavedrom.com", 'html')
+    app.add_config_value('online_wavedrom_js_url', "http://wavedrom.com", 'html')
     app.add_config_value('wavedrom_html_jsinline', True, 'html')
     app.add_directive('wavedrom', WavedromDirective)
     app.connect('build-finished', build_finished)
