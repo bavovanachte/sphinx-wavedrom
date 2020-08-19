@@ -16,6 +16,8 @@ from sphinx.locale import __
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.i18n import search_image_for_language
 from wavedrom import render
+from tempfile import NamedTemporaryFile
+import subprocess
 
 # This exception was not always available..
 try:
@@ -127,16 +129,39 @@ def determine_format(supported):
     return None
 
 
+def render_wavedrom_cli(code):
+    source = NamedTemporaryFile(mode="w", delete=False)
+    output = NamedTemporaryFile(delete=False)
+    source.write(code)
+    # Windows can't use the name a second time while the first file is open
+    source.close()
+    output.close()
+    args = ["npx", "wavedrom-cli", "-i", source.name, "-s", output.name]
+    try:
+        subprocess.run(args, check=True)
+    except subprocess.CalledProcessError:
+        raise  # TODO: handle case when unable to find executable
+    with open(output.name, "r") as svg:
+        svg_text = svg.read()
+    del source, output
+    return svg_text
+
+
 def render_wavedrom(self, node, outpath, bname, format):
     """
     Render a wavedrom image
     """
 
     # Try to convert node, raise error with code on failure
-    try:
-        svgout = render(node["code"])
-    except JSONDecodeError as e:
-        raise SphinxError("Cannot render the following json code: \n{} \n\nError: {}".format(node['code'], e))
+    if True:
+        svg_text = render_wavedrom_cli(node["code"])
+    else:
+        try:
+            svg_text = render(node["code"]).tostring()
+        except JSONDecodeError as e:
+            msg = ("Cannot render the following json code: \n"
+                   "{} \n\nError: {}".format(node['code'], e))
+            raise SphinxError(msg)
 
     if not os.path.exists(outpath):
         os.makedirs(outpath)
@@ -145,7 +170,8 @@ def render_wavedrom(self, node, outpath, bname, format):
     if format == 'image/svg+xml':
         fname = "{}.{}".format(bname, "svg")
         fpath = os.path.join(outpath, fname)
-        svgout.saveas(fpath)
+        with open(fpath, "w") as fp:
+            fp.write(svg_text)
         return fname
 
     # It gets a bit ugly, if the output does not support svg. We use cairosvg, because it is the easiest
@@ -159,13 +185,13 @@ def render_wavedrom(self, node, outpath, bname, format):
     if format == 'application/pdf':
         fname = "{}.{}".format(bname, "pdf")
         fpath = os.path.join(outpath, fname)
-        cairosvg.svg2pdf(svgout.tostring(), write_to=fpath)
+        cairosvg.svg2pdf(svg_text, write_to=fpath)
         return fname
 
     if format == 'image/png':
         fname = "{}.{}".format(bname, "png")
         fpath = os.path.join(outpath, fname)
-        cairosvg.svg2png(svgout.tostring(), write_to=fpath)
+        cairosvg.svg2png(svg_text, write_to=fpath)
         return fname
 
     raise SphinxError("No valid wavedrom conversion supplied")
