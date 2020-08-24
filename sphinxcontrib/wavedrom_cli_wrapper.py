@@ -88,7 +88,10 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
     with open(input_json, 'w') as input_json_file:
         input_json_file.write(node['code'])
     try:
-        process = subprocess.run(generate_wavedrom_args(sphinx, input_json, output_svg), capture_output=True, check=False)
+        process = subprocess.run(
+            generate_wavedrom_args(sphinx, input_json, output_svg),
+            capture_output=True,
+            check=False)
     except OSError as err:
         if err.errno != ENOENT:
             raise
