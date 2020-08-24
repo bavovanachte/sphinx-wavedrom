@@ -2,12 +2,95 @@
 import os
 import subprocess
 import shlex
+from uuid import uuid4
 import cairosvg
+from wavedrom import render
+from sphinx.errors import SphinxError
+
+# This exception was not always available..
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
 
 from sphinx.util.osutil import (
     ensuredir,
     ENOENT,
 )
+
+def determine_format(supported):
+    """
+    Determine the proper format to render
+    :param supported: list of formats that the builder supports
+    :return: Preferred format
+    """
+    order = ['image/svg+xml', 'application/pdf', 'image/png']
+    for image_format in order:
+        if image_format in supported:
+            return image_format
+    return None
+
+
+def render_wavedrom_py(node, outpath, bname, image_format):
+    """
+    Render a wavedrom image
+    """
+    # Try to convert node, raise error with code on failure
+    try:
+        svgout = render(node["code"])
+    except JSONDecodeError as exception:
+        raise SphinxError("Cannot render the following json code: \n{} \n\nError: {}".format(node['code'], exception))
+
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+
+    # SVG can be directly written and is supported on all versions
+    if image_format == 'image/svg+xml':
+        fname = "{}.{}".format(bname, "svg")
+        fpath = os.path.join(outpath, fname)
+        svgout.saveas(fpath)
+        return fname
+
+    if image_format == 'application/pdf':
+        fname = "{}.{}".format(bname, "pdf")
+        fpath = os.path.join(outpath, fname)
+        cairosvg.svg2pdf(svgout.tostring(), write_to=fpath)
+        return fname
+
+    if image_format == 'image/png':
+        fname = "{}.{}".format(bname, "png")
+        fpath = os.path.join(outpath, fname)
+        cairosvg.svg2png(svgout.tostring(), write_to=fpath)
+        return fname
+
+    raise SphinxError("No valid wavedrom conversion supplied")
+
+
+def render_wavedrom_image(sphinx, node):
+    """
+    Visit the wavedrom node
+    """
+    image_format = determine_format(sphinx.builder.supported_image_types)
+    if image_format is None:
+        raise SphinxError("Cannot determine a suitable output format")
+
+    # Create random filename
+    bname = "wavedrom-{}".format(uuid4())
+    outpath = os.path.join(sphinx.builder.outdir, sphinx.builder.imagedir)
+
+    # Render the wavedrom image
+    if sphinx.builder.config.wavedrompy_renderer:
+        imgname = render_wavedrom_py(node, outpath, bname, image_format)
+    else:
+        imgname = render_wavedrom_cli(sphinx, node, outpath, bname, image_format)
+
+    # Now we unpack the image node again. The file was created at the build destination,
+    # and we can now use the standard visitor for the image node. We add the image node
+    # as a child and then raise a SkipDepature, which will trigger the builder to visit
+    # children.
+    image_node = node['image_node']
+    image_node['uri'] = os.path.join(sphinx.builder.imgpath, imgname)
+    node.append(image_node)
 
 def _ntunquote(string_to_unquote):
     '''Function used to unquote windows strings
@@ -76,9 +159,9 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
 
     Raises:
         OSError: File not found
-        Exception: OSError during execution of the wavedrom command
-        Exception: Non-zero return code
-        Exception: Invalid image format input string
+        SphinxError: OSError during execution of the wavedrom command
+        SphinxError: Non-zero return code
+        SphinxError: Invalid image format input string
 
     '''
     fname = None
@@ -90,14 +173,14 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
     try:
         process = subprocess.run(
             generate_wavedrom_args(sphinx, input_json, output_svg),
-            capture_output=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             check=False)
     except OSError as err:
         if err.errno != ENOENT:
             raise
-        raise Exception('wavedrom command %r cannot be run' % sphinx.builder.config.wavedrom_cli)
+        raise SphinxError('wavedrom command %r cannot be run' % sphinx.builder.config.wavedrom_cli)
     if process.returncode != 0:
-        raise Exception('error while running wavedrom\n\n%s' % process.stderr)
+        raise SphinxError('error while running wavedrom\n\n%s' % process.stderr)
 
         # SVG can be directly written and is supported on all versions
     if image_format == 'image/svg+xml':
@@ -111,5 +194,5 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
         fpath = os.path.join(outpath, fname)
         cairosvg.svg2png(url=output_svg, write_to=fpath)
     else:
-        raise Exception('Invalid choice of image format: \n\n%s' % image_format)
+        raise SphinxError('Invalid choice of image format: \n\n%s' % image_format)
     return fname
