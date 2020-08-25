@@ -101,15 +101,11 @@ Build-time image generation through wavedrompy or wavedrom-cli
   stay as close as possible to the JS implementation, but offer a solution that doesn't require node.js or npm to be
   installed.
 
-As mentioned, wavedrom-cli is the default builder. If you want to select wavedrompy instead, add the following
-configuration to your ``conf.py``:
-
-::
-
-    render_using_wavedrompy = True
+As mentioned, wavedrom-cli is the default builder. If you want to select wavedrompy instead, add
+``render_using_wavedrompy = True`` to your ``conf.py``:
 
 Wavedrompy is imported as a python module and requires no further configuration. Wavedrom-cli is executed using system
-calls. The default command is `npx wavedrom-cli`, but this can be overwritten using the **wavedrom_cli** configuration
+calls. The default command is `npx wavedrom-cli`, but this can be overwritten using the ``wavedrom_cli`` configuration
 parameter in `conf.py`
 
 Browser-rendered images through inline Javascript
