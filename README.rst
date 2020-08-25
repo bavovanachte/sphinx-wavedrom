@@ -108,6 +108,10 @@ configuration to your ``conf.py``:
 
     render_using_wavedrompy = True
 
+Wavedrompy is imported as a python module and requires no further configuration. Wavedrom-cli is executed using system
+calls. The default command is `npx wavedrom-cli`, but this can be overwritten using the **wavedrom_cli** configuration
+parameter in `conf.py`
+
 Browser-rendered images through inline Javascript
 `````````````````````````````````````````````````
 
