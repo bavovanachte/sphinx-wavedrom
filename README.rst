@@ -94,10 +94,10 @@ Build-time image generation through wavedrompy or wavedrom-cli
 
 2 Tools are available for the build-time generation of images:
 
-- [wavedrom-cli](https://github.com/wavedrom/cli): The default builder. This is the tool maintained by the wavedrom
+- `wavedrom-cli<https://github.com/wavedrom/cli>`_: The default builder. This is the tool maintained by the wavedrom
   team itself. More bloaty than wavedrompy as it requires node.js and npm to install and use, but more likely to render
   consistent images w.r.t. the browser-rendered version.
-- [wavedrompy](https://github.com/wallento/wavedrompy): A python "clone" of wavedrompy. The goal of the project is to
+- `wavedrompy<https://github.com/wallento/wavedrompy`_: A python "clone" of wavedrompy. The goal of the project is to
   stay as close as possible to the JS implementation, but offer a solution that doesn't require node.js or npm to be
   installed.
 
