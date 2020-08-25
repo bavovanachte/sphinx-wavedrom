@@ -191,7 +191,7 @@ def setup(app):
     app.add_config_value('online_wavedrom_js_url', "http://wavedrom.com", 'html')
     app.add_config_value('wavedrom_html_jsinline', True, 'html')
     app.add_config_value('wavedrom_cli', "npx wavedrom-cli", 'html')
-    app.add_config_value('wavedrompy_renderer', False, 'html')
+    app.add_config_value('render_using_wavedrompy', False, 'html')
     app.add_directive('wavedrom', WavedromDirective)
     app.connect('build-finished', build_finished)
     app.connect('builder-inited', builder_inited)

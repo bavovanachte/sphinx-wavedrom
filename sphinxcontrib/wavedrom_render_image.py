@@ -79,7 +79,7 @@ def render_wavedrom_image(sphinx, node):
     outpath = os.path.join(sphinx.builder.outdir, sphinx.builder.imagedir)
 
     # Render the wavedrom image
-    if sphinx.builder.config.wavedrompy_renderer:
+    if sphinx.builder.config.render_using_wavedrompy:
         imgname = render_wavedrom_py(node, outpath, bname, image_format)
     else:
         imgname = render_wavedrom_cli(sphinx, node, outpath, bname, image_format)

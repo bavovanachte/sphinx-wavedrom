@@ -78,21 +78,38 @@ The extension can be configured to either directly output images or by emitting 
 wavedrom code, which obviously only works for HTML output. All other outputs (most notably ``latexpdf``) embed a
 generated image in any case, but this is only supported when using Python 3.
 
-For HTML output the configuration item ``wavedrom_html_jsinline`` (default: ``True``) can toggled to generate images
-instead of inline javascript code. You must add the following line to your ``conf.py``:
+Depending on the output you're building, the plugin will automatically choose the appropriate image rendering method
+(HTML defaults to browser rendering, pdf to build-time image generation). You can force the generation of build-time
+images by adding the following configuration to your ``conf.py``:
 
 ::
 
     wavedrom_html_jsinline = False
 
-or overwrite the setting on the command line, for example:
+This may be interesting in case you are building for various output targets and want to ensure consistent diagrams
+between all output formats
+
+Build-time image generation through wavedrompy or wavedrom-cli
+``````````````````````````````````````````````````````````````
+
+2 Tools are available for the build-time generation of images:
+
+- [wavedrom-cli](https://github.com/wavedrom/cli): The default builder. This is the tool maintained by the wavedrom
+  team itself. More bloaty than wavedrompy as it requires node.js and npm to install and use, but more likely to render
+  consistent images w.r.t. the browser-rendered version.
+- [wavedrompy](https://github.com/wallento/wavedrompy): A python "clone" of wavedrompy. The goal of the project is to
+  stay as close as possible to the JS implementation, but offer a solution that doesn't require node.js or npm to be
+  installed.
+
+As mentioned, wavedrom-cli is the default builder. If you want to select wavedrompy instead, add the following
+configuration to your ``conf.py``:
 
 ::
 
-    sphinx-build -b html -D wavedrom_html_jsinline=0 sources build/html
+    render_using_wavedrompy = True
 
-HTML: Inline Javascript
-```````````````````````
+Browser-rendered images through inline Javascript
+`````````````````````````````````````````````````
 
 When HTML building is configured to inline the javascript (default), the extension can work in 2 modes:
 
@@ -110,7 +127,7 @@ conf.py:
 
 **Warning**: A full URI is needed when configuring. "http://www.google.com" will work but "www.google.com" won't.
 
-If offline mode is desired, the following parameters need to be provided:
+If offline mode is desired, the following configuration parameters need to be provided:
 
 - **offline_skin_js_path** : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
 - **offline_wavedrom_js_path** : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
