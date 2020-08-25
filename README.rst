@@ -1,4 +1,4 @@
-Sphinx wavedrom extension 
+Sphinx wavedrom extension
 =========================
 
 A sphinx extension that allows including wavedrom diagrams by using its text-based representation
@@ -69,6 +69,11 @@ by the browser. This is the currently the default for HTML output.
 Configuration
 -------------
 
+The following decision tree gives an overview of which configurations to make in different use cases:
+
+.. image:: configuration.png
+  :alt: Decision tree for configuration settings
+
 The extension can be configured to either directly output images or by emitting the javascript to live-render the
 wavedrom code, which obviously only works for HTML output. All other outputs (most notably ``latexpdf``) embed a
 generated image in any case, but this is only supported when using Python 3.
@@ -91,10 +96,19 @@ HTML: Inline Javascript
 
 When HTML building is configured to inline the javascript (default), the extension can work in 2 modes:
 
-- Online mode: 	the extension links to the javascript file(s) provided by the wavedrom server
+- Online mode: 	the extension links to the javascript file(s) hosted on the wavedrom server or your own server
 - Offline mode: the extension uses the javascript file(s) that are saved locally on your drive.
 
-The online mode is the default one. This requires no configuration in conf.py
+The online mode is the default one. In case you want to use the js files hosted on the wavedrom server, no configuration
+is needed. However, in case the desired JS files are hosted on a custom server (or on localhost) add the following to
+conf.py:
+
+- **online_wavedrom_js_url** : the url of the server hosting the javascript files. The plugin will look for 2 files:
+
+	+ {online_wavedrom_js_url}/skins/default.js
+	+ {online_wavedrom_js_url}/wavedrom.js
+
+**Warning**: A full URI is needed when configuring. "http://www.google.com" will work but "www.google.com" won't.
 
 If offline mode is desired, the following parameters need to be provided:
 

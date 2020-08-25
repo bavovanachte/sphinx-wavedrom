@@ -14,8 +14,8 @@ from sphinx.util.docutils import SphinxDirective
 from sphinx.util.i18n import search_image_for_language
 from .wavedrom_render_image import render_wavedrom_image
 
-ONLINE_SKIN_JS = "http://wavedrom.com/skins/default.js"
-ONLINE_WAVEDROM_JS = "http://wavedrom.com/wavedrom.min.js"
+ONLINE_SKIN_JS = "{url}/skins/default.js"
+ONLINE_WAVEDROM_JS = "{url}/wavedrom.min.js"
 
 WAVEDROM_HTML = """
 <div style="overflow-x:auto">
@@ -122,11 +122,11 @@ def builder_inited(app):
     if app.config.offline_skin_js_path is not None:
         app.add_js_file(path.basename(app.config.offline_skin_js_path))
     else:
-        app.add_js_file(ONLINE_SKIN_JS)
+        app.add_js_file(ONLINE_SKIN_JS.format(url=app.config.online_wavedrom_js_url))
     if app.config.offline_wavedrom_js_path is not None:
         app.add_js_file(path.basename(app.config.offline_wavedrom_js_path))
     else:
-        app.add_js_file(ONLINE_WAVEDROM_JS)
+        app.add_js_file(ONLINE_WAVEDROM_JS.format(url=app.config.online_wavedrom_js_url))
 
 
 def build_finished(app, _exception):
@@ -188,6 +188,7 @@ def setup(app):
     """
     app.add_config_value('offline_skin_js_path', None, 'html')
     app.add_config_value('offline_wavedrom_js_path', None, 'html')
+    app.add_config_value('online_wavedrom_js_url', "http://wavedrom.com", 'html')
     app.add_config_value('wavedrom_html_jsinline', True, 'html')
     app.add_config_value('wavedrom_cli', "npx wavedrom-cli", 'html')
     app.add_config_value('wavedrompy_renderer', False, 'html')
