@@ -120,7 +120,7 @@ The online mode is the default one. In case you want to use the js files hosted 
 is needed. However, in case the desired JS files are hosted on a custom server (or on localhost) add the following to
 conf.py:
 
-- **online_wavedrom_js_url** : the url of the server hosting the javascript files. The plugin will look for 2 files:
+- ``online_wavedrom_js_url`` : the url of the server hosting the javascript files. The plugin will look for 2 files:
 
 	+ {online_wavedrom_js_url}/skins/default.js
 	+ {online_wavedrom_js_url}/wavedrom.js
@@ -129,8 +129,8 @@ conf.py:
 
 If offline mode is desired, the following configuration parameters need to be provided:
 
-- **offline_skin_js_path** : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
-- **offline_wavedrom_js_path** : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
+- ``offline_skin_js_path`` : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
+- ``offline_wavedrom_js_path`` : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
 
 The paths given for these configurations need to be relative to the configuration directory (the directory that contains conf.py)
 
