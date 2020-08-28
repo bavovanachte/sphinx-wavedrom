@@ -1,27 +1,18 @@
+'''Sphinx plugin for generating waveform diagrams based on the wavedrom tool'''
 # We need this for older python versions, otherwise it will not use the wavedrom module
 from __future__ import absolute_import
 
-import json
-import os
 from os import path
-from uuid import uuid4
 
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Image
-from sphinx.errors import SphinxError
 from sphinx.ext.graphviz import figure_wrapper
 from sphinx.util.fileutil import copy_asset_file
 from sphinx.locale import __
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.i18n import search_image_for_language
-from wavedrom import render
-
-# This exception was not always available..
-try:
-    from json.decoder import JSONDecodeError
-except ImportError:
-    JSONDecodeError = ValueError
+from .wavedrom_render_image import render_wavedrom_image
 
 ONLINE_SKIN_JS = "{url}/skins/default.js"
 ONLINE_WAVEDROM_JS = "{url}/wavedrom.min.js"
@@ -34,12 +25,11 @@ WAVEDROM_HTML = """
 </div>
 """
 
-
-class wavedromnode(nodes.General, nodes.Inline, nodes.Element):
+class WavedromNode(nodes.General, nodes.Inline, nodes.Element):
     """
     Special node for wavedrom figures. It is not used for inline javascript.
     """
-    pass
+    # pass
 
 
 class WavedromDirective(Image, SphinxDirective):
@@ -70,8 +60,8 @@ class WavedromDirective(Image, SphinxDirective):
             rel_filename, filename = self.env.relfn2path(argument)
             self.env.note_dependency(rel_filename)
             try:
-                with open(filename, 'r') as fp:  # type: ignore
-                    code = fp.read()
+                with open(filename, 'r') as file_pointer:  # type: ignore
+                    code = file_pointer.read()
             except (IOError, OSError):
                 return [document.reporter.warning(
                     __('External wavedrom json file %r not found or reading '
@@ -85,14 +75,13 @@ class WavedromDirective(Image, SphinxDirective):
                     line=self.lineno)]
 
         # For html output with inline JS enabled, just return plain HTML
-        if (self.env.app.builder.name in ('html', 'dirhtml', 'singlehtml')
-            and self.config.wavedrom_html_jsinline):
+        if (self.env.app.builder.name in ('html', 'dirhtml', 'singlehtml') and self.config.wavedrom_html_jsinline):
             text = WAVEDROM_HTML.format(content=code)
             content = nodes.raw(text=text, format='html')
             return [content]
 
         # Store code in a special docutils node and pick up at rendering
-        node = wavedromnode()
+        node = WavedromNode()
 
         node['code'] = code
         wd_node = node # point to the actual wavedrom node
@@ -113,90 +102,6 @@ class WavedromDirective(Image, SphinxDirective):
 
         return [node]
 
-
-def determine_format(supported):
-    """
-    Determine the proper format to render
-    :param supported: list of formats that the builder supports
-    :return: Preferred format
-    """
-    order = ['image/svg+xml', 'application/pdf', 'image/png']
-    for format in order:
-        if format in supported:
-            return format
-    return None
-
-
-def render_wavedrom(self, node, outpath, bname, format):
-    """
-    Render a wavedrom image
-    """
-
-    # Try to convert node, raise error with code on failure
-    try:
-        svgout = render(node["code"])
-    except JSONDecodeError as e:
-        raise SphinxError("Cannot render the following json code: \n{} \n\nError: {}".format(node['code'], e))
-
-    if not os.path.exists(outpath):
-        os.makedirs(outpath)
-
-    # SVG can be directly written and is supported on all versions
-    if format == 'image/svg+xml':
-        fname = "{}.{}".format(bname, "svg")
-        fpath = os.path.join(outpath, fname)
-        svgout.saveas(fpath)
-        return fname
-
-    # It gets a bit ugly, if the output does not support svg. We use cairosvg, because it is the easiest
-    # to use (no dependency on installed programs). But it only works for Python 3.
-    try:
-        import cairosvg
-    except:
-        raise SphinxError(__("Cannot import 'cairosvg'. In Python 2 wavedrom figures other than svg are "
-                             "not supported, in Python 3 ensure 'cairosvg' is installed."))
-
-    if format == 'application/pdf':
-        fname = "{}.{}".format(bname, "pdf")
-        fpath = os.path.join(outpath, fname)
-        cairosvg.svg2pdf(svgout.tostring(), write_to=fpath)
-        return fname
-
-    if format == 'image/png':
-        fname = "{}.{}".format(bname, "png")
-        fpath = os.path.join(outpath, fname)
-        cairosvg.svg2png(svgout.tostring(), write_to=fpath)
-        return fname
-
-    raise SphinxError("No valid wavedrom conversion supplied")
-
-
-def visit_wavedrom(self, node):
-    """
-    Visit the wavedrom node
-    """
-    format = determine_format(self.builder.supported_image_types)
-    if format is None:
-        raise SphinxError(__("Cannot determine a suitable output format"))
-
-    # Create random filename
-    bname = "wavedrom-{}".format(uuid4())
-    outpath = path.join(self.builder.outdir, self.builder.imagedir)
-
-    # Render the wavedrom image
-    imgname = render_wavedrom(self, node, outpath, bname, format)
-
-    # Now we unpack the image node again. The file was created at the build destination,
-    # and we can now use the standard visitor for the image node. We add the image node
-    # as a child and then raise a SkipDepature, which will trigger the builder to visit
-    # children.
-    image_node = node['image_node']
-    image_node['uri'] = os.path.join(self.builder.imgpath, imgname)
-    node.append(image_node)
-
-    raise nodes.SkipDeparture
-
-
 def builder_inited(app):
     """
     Sets wavedrom_html_jsinline to False for all non-html builders for
@@ -207,8 +112,7 @@ def builder_inited(app):
     the online files from the wavedrom server, or the locally provided wavedrom
     javascript files
     """
-    if (app.config.wavedrom_html_jsinline and
-        app.builder.name not in ('html', 'dirhtml', 'singlehtml')):
+    if (app.config.wavedrom_html_jsinline and app.builder.name not in ('html', 'dirhtml', 'singlehtml')):
         app.config.wavedrom_html_jsinline = False
 
     # Skip for non-html or if javascript is not inlined
@@ -225,7 +129,7 @@ def builder_inited(app):
         app.add_js_file(ONLINE_WAVEDROM_JS.format(url=app.config.online_wavedrom_js_url))
 
 
-def build_finished(app, exception):
+def build_finished(app, _exception):
     """
     When the build is finished, we copy the javascript files (if specified)
     to the build directory (the static folder)
@@ -235,12 +139,18 @@ def build_finished(app, exception):
         return
 
     if app.config.offline_skin_js_path is not None:
-        copy_asset_file(path.join(app.builder.srcdir, app.config.offline_skin_js_path), path.join(app.builder.outdir, '_static'), app.builder)
+        copy_asset_file(
+            path.join(app.builder.srcdir, app.config.offline_skin_js_path),
+            path.join(app.builder.outdir, '_static'),
+            app.builder)
     if app.config.offline_wavedrom_js_path is not None:
-        copy_asset_file(path.join(app.builder.srcdir, app.config.offline_wavedrom_js_path), path.join(app.builder.outdir, '_static'), app.builder)
+        copy_asset_file(
+            path.join(app.builder.srcdir, app.config.offline_wavedrom_js_path),
+            path.join(app.builder.outdir, '_static'),
+            app.builder)
 
 
-def doctree_resolved(app, doctree, fromdocname):
+def doctree_resolved(app, doctree, _fromdocname):
     """
     When the document, and all the links are fully resolved, we inject one
     raw html element for running the command for processing the wavedrom
@@ -259,6 +169,18 @@ def doctree_resolved(app, doctree, fromdocname):
     </script>"""
     doctree.append(nodes.raw(text=text, format='html'))
 
+def visit_wavedrom(sphinx, node):
+    '''WavedromNode visit function. This function will generate an image that is included in the document
+
+    Args:
+        sphinx (sphinx): Sphinx instance
+        node (WavedromNode): WavedromNode that is being processed
+
+    Raises:
+        SkipDeparture: Highlights to sphinx that a departure callback is not needed
+    '''
+    render_wavedrom_image(sphinx, node)
+    raise nodes.SkipDeparture
 
 def setup(app):
     """
@@ -268,13 +190,14 @@ def setup(app):
     app.add_config_value('offline_wavedrom_js_path', None, 'html')
     app.add_config_value('online_wavedrom_js_url', "http://wavedrom.com", 'html')
     app.add_config_value('wavedrom_html_jsinline', True, 'html')
+    app.add_config_value('wavedrom_cli', "npx wavedrom-cli", 'html')
+    app.add_config_value('render_using_wavedrompy', False, 'html')
     app.add_directive('wavedrom', WavedromDirective)
     app.connect('build-finished', build_finished)
     app.connect('builder-inited', builder_inited)
     app.connect('doctree-resolved', doctree_resolved)
 
-    app.add_node(wavedromnode,
-                 html = (visit_wavedrom, None),
-                 latex = (visit_wavedrom, None),
+    app.add_node(WavedromNode,
+                 html=(visit_wavedrom, None),
+                 latex=(visit_wavedrom, None),
                  )
-

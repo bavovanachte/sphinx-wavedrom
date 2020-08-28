@@ -3,29 +3,82 @@ name: Publish Python distributions to PyPI and TestPyPI
 on: push
 
 jobs:
-  build-n-publish:
-    name: Build and publish Python distributions to PyPI and TestPyPI
+  build_dist:
+    name: Build distribution packages
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install twine
-      run: python -m pip install wheel setuptools_scm --user
-    - name: Build a binary wheel and a source tarball
-      run: python setup.py bdist_wheel sdist
-    - name: Save dist folder contents as artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: dist_folder
-        path: dist/
-    - name: Publish package
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install twine
+        run: python -m pip install wheel setuptools_scm --user
+      - name: Build a binary wheel and a source tarball
+        run: python setup.py bdist_wheel sdist
+      - name: Save dist folder contents as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist_folder
+          path: dist/
+
+  # dummy_test_job:
+  #   name: Dummy job to print the artifact location
+  #   runs-on: ubuntu-18.04
+  #   needs: build_dist
+  #   steps:
+  #     - name: Download wheel and source distribution from build_dist job
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: dist_folder
+  #         path: dist
+  #     - name: Check folder contents
+  #       run: find .
+
+  publish_to_pypi:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    name: Publish Python distributions to PyPI and TestPyPI
+    needs: build_dist
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download wheel and source distribution from build_dist job
+        uses: actions/download-artifact@v2
+        with:
+          name: dist_folder
+          path: dist
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
+
+  create_github_release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    name: Publish Python distributions to PyPI and TestPyPI
+    needs: build_dist
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download wheel and source distribution from build_dist job
+        uses: actions/download-artifact@v2
+        with:
+          name: dist_folder
+          path: dist
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload wheel
+        id: upload-release-asset
+        uses: csexton/release-asset-action@v2
+        with:
+          pattern: "dist/*"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ steps.create_release.outputs.upload_url }}

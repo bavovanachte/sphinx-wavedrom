@@ -34,7 +34,7 @@ jobs:
       - name: Build dirhtml document with prebuilt images
         run: make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1
 
-  pdf:
+  pdf-with-wavedromcli:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,6 +46,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+      - name: Test to see if wavedrom-cli is installed
+        run: npm i wavedrom-cli@latest && npx wavedrom-cli --help
       - name: Upgrade pip
         run: pip install --upgrade pip setuptools
       - name: Install dependencies
@@ -54,6 +56,16 @@ jobs:
         run: pip install -e .
       - name: Install latex
         run: sudo apt-get update --allow-unauthenticated -y && sudo apt-get install -y latexmk && sudo apt-get install -y texlive-latex-recommended && sudo apt-get install -y texlive-fonts-recommended && sudo apt-get install -y texlive-latex-extra
-      - name: Build latexpdf document
+      - name: Build latexpdf document using wavedrom-cli
         run: make -C example clean latexpdf
-
+      - name: Copy build results for artifacting
+        run: mkdir -p example/artifacts/pdf_wavedromcli/${{ matrix.python }}; cp example/build/latex/Example.pdf example/artifacts/pdf_wavedromcli/${{ matrix.python }}
+      - name: Build latexpdf document using wavedrompy
+        run: make -C example clean latexpdf WAVEDROMPY_RENDERING=1
+      - name: Copy build results for artifacting
+        run: mkdir -p example/artifacts/pdf_wavedrompy/${{ matrix.python }}; cp example/build/latex/Example.pdf example/artifacts/pdf_wavedrompy/${{ matrix.python }}
+      - name: Store build result as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf_results
+          path: example/artifacts/

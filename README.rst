@@ -78,21 +78,38 @@ The extension can be configured to either directly output images or by emitting 
 wavedrom code, which obviously only works for HTML output. All other outputs (most notably ``latexpdf``) embed a
 generated image in any case, but this is only supported when using Python 3.
 
-For HTML output the configuration item ``wavedrom_html_jsinline`` (default: ``True``) can toggled to generate images
-instead of inline javascript code. You must add the following line to your ``conf.py``:
+Depending on the output you're building, the plugin will automatically choose the appropriate image rendering method
+(HTML defaults to browser rendering, pdf to build-time image generation). You can force the generation of build-time
+images by adding the following configuration to your ``conf.py``:
 
 ::
 
     wavedrom_html_jsinline = False
 
-or overwrite the setting on the command line, for example:
+This may be interesting in case you are building for various output targets and want to ensure consistent diagrams
+between all output formats
 
-::
+Build-time image generation through wavedrompy or wavedrom-cli
+``````````````````````````````````````````````````````````````
 
-    sphinx-build -b html -D wavedrom_html_jsinline=0 sources build/html
+2 Tools are available for the build-time generation of images:
 
-HTML: Inline Javascript
-```````````````````````
+- `wavedrom-cli <https://github.com/wavedrom/cli>`_: The default builder. This is the tool maintained by the wavedrom
+  team itself. More bloaty than wavedrompy as it requires node.js and npm to install and use, but more likely to render
+  consistent images w.r.t. the browser-rendered version.
+- `wavedrompy <https://github.com/wallento/wavedrompy>`_: A python "clone" of wavedrompy. The goal of the project is to
+  stay as close as possible to the JS implementation, but offer a solution that doesn't require node.js or npm to be
+  installed.
+
+As mentioned, wavedrom-cli is the default builder. If you want to select wavedrompy instead, add
+``render_using_wavedrompy = True`` to your ``conf.py``:
+
+Wavedrompy is imported as a python module and requires no further configuration. Wavedrom-cli is executed using system
+calls. The default command is `npx wavedrom-cli`, but this can be overwritten using the ``wavedrom_cli`` configuration
+parameter in `conf.py`
+
+Browser-rendered images through inline Javascript
+`````````````````````````````````````````````````
 
 When HTML building is configured to inline the javascript (default), the extension can work in 2 modes:
 
@@ -103,17 +120,17 @@ The online mode is the default one. In case you want to use the js files hosted 
 is needed. However, in case the desired JS files are hosted on a custom server (or on localhost) add the following to
 conf.py:
 
-- **online_wavedrom_js_url** : the url of the server hosting the javascript files. The plugin will look for 2 files:
+- ``online_wavedrom_js_url`` : the url of the server hosting the javascript files. The plugin will look for 2 files:
 
 	+ {online_wavedrom_js_url}/skins/default.js
 	+ {online_wavedrom_js_url}/wavedrom.js
 
 **Warning**: A full URI is needed when configuring. "http://www.google.com" will work but "www.google.com" won't.
 
-If offline mode is desired, the following parameters need to be provided:
+If offline mode is desired, the following configuration parameters need to be provided:
 
-- **offline_skin_js_path** : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
-- **offline_wavedrom_js_path** : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
+- ``offline_skin_js_path`` : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
+- ``offline_wavedrom_js_path`` : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
 
 The paths given for these configurations need to be relative to the configuration directory (the directory that contains conf.py)
 
