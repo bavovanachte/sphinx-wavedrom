@@ -27,6 +27,7 @@ jobs:
   dummy_test_job:
     name: Dummy job to print the artifact location
     runs-on: ubuntu-18.04
+    needs: build_dist
     steps:
       - name: Download wheel and source distribution from build_dist job
         uses: actions/download-artifact@v2
