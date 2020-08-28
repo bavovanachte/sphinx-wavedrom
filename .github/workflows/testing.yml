@@ -34,7 +34,7 @@ jobs:
       - name: Build dirhtml document with prebuilt images
         run: make -C example clean dirhtml WAVEDROM_HTML_NOJSINLINE=1
 
-  pdf:
+  pdf-with-wavedromcli:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -56,4 +56,11 @@ jobs:
         run: sudo apt-get update --allow-unauthenticated -y && sudo apt-get install -y latexmk && sudo apt-get install -y texlive-latex-recommended && sudo apt-get install -y texlive-fonts-recommended && sudo apt-get install -y texlive-latex-extra
       - name: Build latexpdf document
         run: make -C example clean latexpdf
+      - name: Copy build results for artifacting
+        run: mkdir -p example/artifacts/pdf_wavedromcli/${{ matrix.python }}; cp example/build/latex/Example.pdf example/artifacts/pdf_wavedromcli/${{ matrix.python }}
+      - name: Store build result as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf_results
+          path: example/artifacts/
 
