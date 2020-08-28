@@ -47,7 +47,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Test to see if wavedrom-cli is installed
-        run: npx wavedrom-cli --help
+        run: npm i wavedrom-cli@latest && npx wavedrom-cli --help
       - name: Upgrade pip
         run: pip install --upgrade pip setuptools
       - name: Install dependencies
