@@ -35,7 +35,6 @@ def render_wavedrom_py(node, outpath, bname, image_format):
     """
     Render a wavedrom image
     """
-    raise Exception()
     # Try to convert node, raise error with code on failure
     try:
         svgout = render(node["code"])
