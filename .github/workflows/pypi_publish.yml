@@ -24,6 +24,17 @@ jobs:
           name: dist_folder
           path: dist/
 
+  dummy_test_job:
+    name: Dummy job to print the artifact location
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download wheel and source distribution from build_dist job
+        uses: actions/download-artifact@v2
+        with:
+          name: dist_folder
+      - name: Check folder contents
+        run: find .
+
   publish_to_pypi:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     name: Publish Python distributions to PyPI and TestPyPI
