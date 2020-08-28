@@ -164,7 +164,6 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
         SphinxError: Invalid image format input string
 
     '''
-    raise Exception()
     fname = None
     ensuredir(outpath)
     input_json = os.path.join(outpath, "{}.{}".format(bname, 'json5'))
