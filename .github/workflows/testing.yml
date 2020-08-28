@@ -56,43 +56,16 @@ jobs:
         run: pip install -e .
       - name: Install latex
         run: sudo apt-get update --allow-unauthenticated -y && sudo apt-get install -y latexmk && sudo apt-get install -y texlive-latex-recommended && sudo apt-get install -y texlive-fonts-recommended && sudo apt-get install -y texlive-latex-extra
-      - name: Build latexpdf document
+      - name: Build latexpdf document using wavedrom-cli
         run: make -C example clean latexpdf
       - name: Copy build results for artifacting
         run: mkdir -p example/artifacts/pdf_wavedromcli/${{ matrix.python }}; cp example/build/latex/Example.pdf example/artifacts/pdf_wavedromcli/${{ matrix.python }}
-      - name: Store build result as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: pdf_results
-          path: example/artifacts/
-
-  pdf-with-wavedrompy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python: [3.5, 3.6, 3.7, 3.8]
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Upgrade pip
-        run: pip install --upgrade pip setuptools
-      - name: Install dependencies
-        run: pip install sphinx_rtd_theme
-      - name: Install sphinxcontrib-wavedrom module itself
-        run: pip install -e .
-      - name: Install latex
-        run: sudo apt-get update --allow-unauthenticated -y && sudo apt-get install -y latexmk && sudo apt-get install -y texlive-latex-recommended && sudo apt-get install -y texlive-fonts-recommended && sudo apt-get install -y texlive-latex-extra
-      - name: Build latexpdf document
+      - name: Build latexpdf document using wavedrompy
         run: make -C example clean latexpdf WAVEDROMPY_RENDERING=1
       - name: Copy build results for artifacting
-        run: mkdir -p example/artifacts/pdf_wavedromcli/${{ matrix.python }}; cp example/build/latex/Example.pdf example/artifacts/pdf_wavedromcli/${{ matrix.python }}
+        run: mkdir -p example/artifacts/pdf_wavedrompy/${{ matrix.python }}; cp example/build/latex/Example.pdf example/artifacts/pdf_wavedrompy/${{ matrix.python }}
       - name: Store build result as artifact
         uses: actions/upload-artifact@v2
         with:
           name: pdf_results
           path: example/artifacts/
-
