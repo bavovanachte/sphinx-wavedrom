@@ -3,7 +3,7 @@ Sphinx wavedrom extension
 
 A sphinx extension that allows including wavedrom diagrams by using its text-based representation
 
-Wavedrom online editor and tutorial: http://wavedrom.com/
+Wavedrom online editor and tutorial: https://wavedrom.com/
 
 .. image:: https://travis-ci.org/bavovanachte/sphinx-wavedrom.svg?branch=master
 	:target: https://travis-ci.org/bavovanachte/sphinx-wavedrom
@@ -129,8 +129,8 @@ conf.py:
 
 If offline mode is desired, the following configuration parameters need to be provided:
 
-- ``offline_skin_js_path`` : the path to the skin javascript file (the url to the online version is "http://wavedrom.com/skins/default.js")
-- ``offline_wavedrom_js_path`` : the path to the wavedrom javascript file (the url to the online version is "http://wavedrom.com/WaveDrom.js")
+- ``offline_skin_js_path`` : the path to the skin javascript file (the url to the online version is "https://wavedrom.com/skins/default.js")
+- ``offline_wavedrom_js_path`` : the path to the wavedrom javascript file (the url to the online version is "https://wavedrom.com/WaveDrom.js")
 
 The paths given for these configurations need to be relative to the configuration directory (the directory that contains conf.py)
 

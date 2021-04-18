@@ -20,7 +20,7 @@ The content for this example documentation for the wavedrom sphinx extension was
 entirety borrowed from the `Wavedrom tutorial`_ itself. This is partly because of a lack of inspiration
 and partly to show the behaviour of this plugin matches the images generated on the wavedrom website.
 
-.. _Wavedrom tutorial: http://wavedrom.com/tutorial.html
+.. _Wavedrom tutorial: https://wavedrom.com/tutorial.html
 
 
 ==================
