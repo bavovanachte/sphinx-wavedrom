@@ -188,7 +188,7 @@ def setup(app):
     """
     app.add_config_value('offline_skin_js_path', None, 'html')
     app.add_config_value('offline_wavedrom_js_path', None, 'html')
-    app.add_config_value('online_wavedrom_js_url', "http://wavedrom.com", 'html')
+    app.add_config_value('online_wavedrom_js_url', "https://wavedrom.com", 'html')
     app.add_config_value('wavedrom_html_jsinline', True, 'html')
     app.add_config_value('wavedrom_cli', "npx wavedrom-cli", 'html')
     app.add_config_value('render_using_wavedrompy', False, 'html')
