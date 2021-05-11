@@ -6,6 +6,7 @@ from uuid import uuid4
 import cairosvg
 from wavedrom import render
 from sphinx.errors import SphinxError
+import errno
 
 # This exception was not always available..
 try:
@@ -13,10 +14,9 @@ try:
 except ImportError:
     JSONDecodeError = ValueError
 
-from sphinx.util.osutil import (
-    ensuredir,
-    ENOENT,
-)
+from sphinx.util.osutil import ensuredir
+
+ENOENT = getattr(errno, 'ENOENT', 0)
 
 def determine_format(supported):
     """
