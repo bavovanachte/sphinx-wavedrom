@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         python: [3.5, 3.6, 3.7, 3.8]
-
+        sphinx: [1.*, 2.*, 3.*, 4.*]
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
@@ -17,6 +17,8 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Upgrade pip
         run: pip install --upgrade pip setuptools
+      - name: Install sphinx version
+        run: pip install sphinx==${{ matrix.sphinx }}
       - name: Install dependencies
         run: pip install sphinx_rtd_theme
       - name: Install sphinxcontrib-wavedrom module itself
@@ -39,7 +41,7 @@ jobs:
     strategy:
       matrix:
         python: [3.5, 3.6, 3.7, 3.8]
-
+        sphinx: [ 1.*, 2.*, 3.*, 4.* ]
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
@@ -50,6 +52,8 @@ jobs:
         run: npm i wavedrom-cli@latest && npx wavedrom-cli --help
       - name: Upgrade pip
         run: pip install --upgrade pip setuptools
+      - name: Install sphinx version
+        run: pip install sphinx==${{ matrix.sphinx }}
       - name: Install dependencies
         run: pip install sphinx_rtd_theme
       - name: Install sphinxcontrib-wavedrom module itself
