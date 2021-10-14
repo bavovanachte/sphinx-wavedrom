@@ -123,14 +123,14 @@ conf.py:
 - ``online_wavedrom_js_url`` : the url of the server hosting the javascript files. The plugin will look for 2 files:
 
 	+ {online_wavedrom_js_url}/skins/default.js
-	+ {online_wavedrom_js_url}/wavedrom.js
+	+ {online_wavedrom_js_url}/wavedrom.min.js
 
 **Warning**: A full URI is needed when configuring. "http://www.google.com" will work but "www.google.com" won't.
 
 If offline mode is desired, the following configuration parameters need to be provided:
 
 - ``offline_skin_js_path`` : the path to the skin javascript file (the url to the online version is "https://wavedrom.com/skins/default.js")
-- ``offline_wavedrom_js_path`` : the path to the wavedrom javascript file (the url to the online version is "https://wavedrom.com/WaveDrom.js")
+- ``offline_wavedrom_js_path`` : the path to the wavedrom javascript file (the url to the online version is "https://wavedrom.com/wavedrom.min.js")
 
 The paths given for these configurations need to be relative to the configuration directory (the directory that contains conf.py)
 
