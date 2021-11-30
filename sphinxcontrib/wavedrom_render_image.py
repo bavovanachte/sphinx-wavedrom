@@ -143,7 +143,7 @@ def generate_wavedrom_args(sphinx, input_filename, output_filename):
 WAVEDROM_NOT_FOUND = '''
 Wavedrom command %r cannot be run. Versions >3.0.0 use wavedrom-cli as the default rendering engine for the diagrams,
 which may not be available or installable on your system.
-A pure python wavedrom implementation (wavedrompy) is available as backup option and can be activated by configuring
+A pure python wavedrom implementation (wavedrompy) is available as alternative and can be activated by configuring
 "render_using_wavedrompy = True" in your conf.py. However, be aware that its results may differ from the official
 wavedrom tool
 '''
