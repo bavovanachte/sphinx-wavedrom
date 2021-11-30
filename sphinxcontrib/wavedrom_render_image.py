@@ -140,6 +140,14 @@ def generate_wavedrom_args(sphinx, input_filename, output_filename):
     args.extend(['-s', output_filename])
     return args
 
+WAVEDROM_NOT_FOUND = '''
+Wavedrom command %r cannot be run. Versions >3.0.0 use wavedrom-cli as the default rendering engine for the diagrams,
+which may not be available or installable on your system.
+A pure python wavedrom implementation (wavedrompy) is available as alternative and can be activated by configuring
+"render_using_wavedrompy = True" in your conf.py. However, be aware that its results may differ from the official
+wavedrom tool
+'''
+
 def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
     '''Function for generating the image using the wavedrom-cli executable
 
@@ -178,7 +186,7 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
     except OSError as err:
         if err.errno != ENOENT:
             raise
-        raise SphinxError('wavedrom command %r cannot be run' % sphinx.builder.config.wavedrom_cli)
+        raise SphinxError(WAVEDROM_NOT_FOUND % sphinx.builder.config.wavedrom_cli)
     if process.returncode != 0:
         raise SphinxError('error while running wavedrom\n\n%s' % process.stderr)
 
