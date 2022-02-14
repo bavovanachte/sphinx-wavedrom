@@ -6,6 +6,7 @@ jobs:
   html:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python: [3.6, 3.7, 3.8]
         sphinx: [1.*, 2.*, 3.*, 4.*]
@@ -39,6 +40,7 @@ jobs:
   pdf-with-wavedromcli:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python: [3.6, 3.7, 3.8]
         sphinx: [ 1.*, 2.*, 3.*, 4.*]
