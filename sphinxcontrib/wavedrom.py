@@ -201,3 +201,8 @@ def setup(app):
                  html=(visit_wavedrom, None),
                  latex=(visit_wavedrom, None),
                  )
+
+    return {
+        'parallel_read_safe': True,
+        'parallel_write_safe': True
+    }
