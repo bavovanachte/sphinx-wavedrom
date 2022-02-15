@@ -6,8 +6,9 @@ jobs:
   html:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python: [3.6, 3.7, 3.8]
+        python: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         sphinx: [1.*, 2.*, 3.*, 4.*]
     steps:
       - uses: actions/checkout@v2
@@ -39,8 +40,9 @@ jobs:
   pdf-with-wavedromcli:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python: [3.6, 3.7, 3.8]
+        python: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         sphinx: [ 1.*, 2.*, 3.*, 4.*]
     steps:
       - uses: actions/checkout@v2
