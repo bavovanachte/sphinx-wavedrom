@@ -182,6 +182,7 @@ def render_wavedrom_cli(sphinx, node, outpath, bname, image_format):
         process = subprocess.run(
             generate_wavedrom_args(sphinx, input_json, output_svg),
             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            stdin=subprocess.DEVNULL,
             check=False)
     except OSError as err:
         if err.errno != ENOENT:
