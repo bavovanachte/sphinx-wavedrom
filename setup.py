@@ -20,7 +20,7 @@ setup(
     description='A sphinx extension that allows generating wavedrom diagrams based on their textual representation',
     long_description=open("README.rst").read(),
     zip_safe=False,
-    classifiers=[],
+    classifiers=['Framework :: Sphinx :: Extension'],
     platforms='any',
     packages=find_packages(exclude=['example']),
     include_package_data=True,
