@@ -21,7 +21,7 @@ jobs:
       - name: Install sphinx version
         run: pip install sphinx==${{ matrix.sphinx }}
       - name: Install dependencies
-        run: pip install sphinx_rtd_theme
+        run: pip install sphinx_rtd_theme sphinxcontrib-confluencebuilder
       - name: Install sphinxcontrib-wavedrom module itself
         run: pip install -e .
       - name: Build html document with JS rendering
@@ -57,7 +57,7 @@ jobs:
       - name: Install sphinx version
         run: pip install sphinx==${{ matrix.sphinx }}
       - name: Install dependencies
-        run: pip install sphinx_rtd_theme
+        run: pip install sphinx_rtd_theme sphinxcontrib-confluencebuilder
       - name: Install sphinxcontrib-wavedrom module itself
         run: pip install -e .
       - name: Install latex
@@ -75,3 +75,27 @@ jobs:
         with:
           name: pdf_results
           path: example/artifacts/
+
+  confluence:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.7", "3.8", "3.9", "3.10"]
+        sphinx: [5.*]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Upgrade pip
+        run: pip install --upgrade pip setuptools
+      - name: Install sphinx version
+        run: pip install sphinx==${{ matrix.sphinx }}
+      - name: Install dependencies
+        run: pip install sphinx_rtd_theme sphinxcontrib-confluencebuilder
+      - name: Install sphinxcontrib-wavedrom module itself
+        run: pip install -e .
+      - name: Build confluence without publishing
+        run: sphinx-build -W -b confluence example/source confluenceoutput
