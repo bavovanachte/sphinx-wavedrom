@@ -200,6 +200,7 @@ def setup(app):
     app.add_node(WavedromNode,
                  html=(visit_wavedrom, None),
                  latex=(visit_wavedrom, None),
+                 confluence=(visit_wavedrom, None),
                  )
 
     return {
