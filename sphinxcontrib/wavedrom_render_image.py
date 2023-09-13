@@ -38,8 +38,12 @@ def render_wavedrom_py(node, outpath, bname, image_format):
     # Try to convert node, raise error with code on failure
     try:
         svgout = render(node["code"])
-    except JSONDecodeError as exception:
-        raise SphinxError("Cannot render the following json code: \n{} \n\nError: {}".format(node['code'], exception))
+    except Exception:
+        print(
+            "Cannot render the following json code: \n{} \n\n".format(
+                node['code']),
+            file=sys.stderr)
+        raise
 
     if not os.path.exists(outpath):
         os.makedirs(outpath)
