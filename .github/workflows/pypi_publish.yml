@@ -30,7 +30,7 @@ jobs:
   #   needs: build_dist
   #   steps:
   #     - name: Download wheel and source distribution from build_dist job
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v4.1.7
   #       with:
   #         name: dist_folder
   #         path: dist
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Download wheel and source distribution from build_dist job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dist_folder
           path: dist
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Download wheel and source distribution from build_dist job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dist_folder
           path: dist
